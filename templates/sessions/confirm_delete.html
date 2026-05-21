@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar sesión — GymLog{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Eliminar sesión</h1></div>
+<div class="card" style="max-width:480px;">
+  <p style="margin-bottom:20px;">¿Eliminar la sesión del <strong>{{ session.date|date:"d M Y" }}</strong>? Se borrarán también todas las series de esa sesión.</p>
+  <form method="post" style="display:flex;gap:10px;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+    <a href="{% url 'workouts:session_list' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

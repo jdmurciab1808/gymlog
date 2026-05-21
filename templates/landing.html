@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GymLog — Registra tu progreso</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+<div class="landing-page">
+  <div class="landing-hero">
+    <h1>GYMLOG</h1>
+    <p>Registra cada serie, cada kilo, cada progreso. Tu historial de entrenamiento siempre contigo.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="{% url 'register' %}" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">
+        Empezar gratis →
+      </a>
+      <a href="{% url 'login' %}" class="btn btn-secondary" style="font-size:16px;padding:14px 32px;">
+        Iniciar sesión
+      </a>
+    </div>
+  </div>
+
+  <div class="landing-features">
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Historial de pesos</h3>
+      <p>Ve exactamente cuánto levantaste en cada ejercicio y cuándo estableciste tu récord personal.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3>Rutinas personalizadas</h3>
+      <p>Crea tus rutinas de Push/Pull/Legs o lo que necesites y úsalas en cada sesión.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <h3>Progreso visual</h3>
+      <p>Gráficas de evolución por ejercicio para ver si realmente estás mejorando semana a semana.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

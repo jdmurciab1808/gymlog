@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Sesión {{ session.date }} — GymLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Sesión del {{ session.date|date:"d \d\e F Y" }}</h1>
+    <p style="color:var(--text-muted);">{{ session.routine.name|default:"Entrenamiento libre" }} · {{ session.duration_minutes }} min</p>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <a href="{% url 'workouts:session_edit' session.pk %}" class="btn btn-secondary">Editar</a>
+    <a href="{% url 'workouts:session_delete' session.pk %}" class="btn btn-danger">Eliminar</a>
+  </div>
+</div>
+
+<div class="stats-grid" style="max-width:600px;margin-bottom:24px;">
+  <div class="stat-card">
+    <div class="value">{{ session.total_volume }}</div>
+    <div class="label">Volumen total (kg·rep)</div>
+  </div>
+  <div class="stat-card">
+    <div class="value">{{ session.sets.count }}</div>
+    <div class="label">Series</div>
+  </div>
+</div>
+
+{% if session.notes %}
+<div class="card" style="margin-bottom:20px;">
+  <h3 style="margin-bottom:8px;">Notas</h3>
+  <p style="color:var(--text-muted);">{{ session.notes }}</p>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2 style="margin-bottom:16px;">Series registradas</h2>
+  {% if sets %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Ejercicio</th><th># Serie</th><th>Reps</th><th>Peso (kg)</th><th>RPE</th><th>Nota</th></tr></thead>
+      <tbody>
+        {% for set in sets %}
+        <tr>
+          <td><strong>{{ set.exercise.name }}</strong></td>
+          <td>{{ set.set_number }}</td>
+          <td>{{ set.reps }}</td>
+          <td>{% if set.weight %}{{ set.weight }}{% else %}—{% endif %}</td>
+          <td>{% if set.rpe %}{{ set.rpe }}{% else %}—{% endif %}</td>
+          <td style="color:var(--text-muted);">{{ set.notes|default:"—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p style="color:var(--text-muted);">No hay series registradas en esta sesión.</p>
+  {% endif %}
+</div>
+{% endblock %}

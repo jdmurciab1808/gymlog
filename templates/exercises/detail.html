@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}{{ exercise.name }} — GymLog{% endblock %}
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>{{ exercise.name }}</h1>
+    <p style="color:var(--text-muted);font-size:14px;">{{ exercise.muscle_group.name }} · <span class="badge badge-{{ exercise.category }}">{{ exercise.get_category_display }}</span></p>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <a href="{% url 'workouts:exercise_edit' exercise.pk %}" class="btn btn-secondary">Editar</a>
+    <a href="{% url 'workouts:exercise_list' %}" class="btn btn-secondary">← Volver</a>
+  </div>
+</div>
+
+{% if personal_record %}
+<div class="stats-grid" style="max-width:400px;">
+  <div class="stat-card">
+    <div class="value">{{ personal_record }}</div>
+    <div class="label">Récord personal (kg)</div>
+  </div>
+</div>
+{% endif %}
+
+{% if history %}
+<div class="chart-container">
+  <h2 style="margin-bottom:16px;">Evolución del peso levantado</h2>
+  <canvas id="progressChart" height="80"></canvas>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="icon">📈</div>
+  <p>Registra sesiones con este ejercicio para ver tu progreso.</p>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% if history %}
+<script>
+const data = {{ history|safe }};
+const labels = data.map(d => d.date);
+const weights = data.map(d => d.weight);
+new Chart(document.getElementById('progressChart'), {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [{
+      label: 'Peso (kg)',
+      data: weights,
+      borderColor: '#e8ff47',
+      backgroundColor: 'rgba(232,255,71,0.1)',
+      tension: 0.4,
+      fill: true,
+      pointBackgroundColor: '#e8ff47',
+      pointRadius: 5,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#f0f0f0' } } },
+    scales: {
+      x: { ticks: { color: '#888' }, grid: { color: '#2a2a2a' } },
+      y: { ticks: { color: '#888' }, grid: { color: '#2a2a2a' } }
+    }
+  }
+});
+</script>
+{% endif %}
+{% endblock %}

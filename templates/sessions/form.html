@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} — GymLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ title }}</h1>
+  <a href="{% url 'workouts:session_list' %}" class="btn btn-secondary">← Volver</a>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+  {{ formset.management_form }}
+
+  <div class="card" style="margin-bottom:20px;">
+    <h2 style="margin-bottom:20px;">Datos de la sesión</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Rutina (opcional)</label>
+        {{ session_form.routine }}
+      </div>
+      <div class="form-group">
+        <label>Fecha</label>
+        {{ session_form.date }}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Duración (minutos)</label>
+        {{ session_form.duration_minutes }}
+      </div>
+      <div class="form-group">
+        <label>Notas</label>
+        {{ session_form.notes }}
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="formset-header">
+      <h2>Series</h2>
+      <small style="color:var(--text-muted);">Agrega cada serie por ejercicio</small>
+    </div>
+
+    <div id="formset-container">
+      {% for set_form in formset %}
+      <div class="set-form">
+        {% if set_form.instance.pk %}{{ set_form.id }}{% endif %}
+        <div class="set-form-grid">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Ejercicio</label>
+            {{ set_form.exercise }}
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label># Serie</label>
+            {{ set_form.set_number }}
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Reps</label>
+            {{ set_form.reps }}
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Peso (kg)</label>
+            {{ set_form.weight }}
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>RPE</label>
+            {{ set_form.rpe }}
+          </div>
+        </div>
+        {% if set_form.DELETE %}
+        <div class="delete-check" style="margin-top:8px;">
+          {{ set_form.DELETE }} Eliminar esta serie
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button type="submit" class="btn btn-primary">💾 Guardar sesión</button>
+      <a href="{% url 'workouts:session_list' %}" class="btn btn-secondary">Cancelar</a>
+    </div>
+  </div>
+</form>
+{% endblock %}

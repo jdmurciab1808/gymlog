@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}GymLog{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span>GYMLOG</span>
+      <small>Track your gains</small>
+    </div>
+    <nav>
+      <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <span class="icon">📊</span> Dashboard
+      </a>
+      <a href="{% url 'workouts:session_create' %}" class="{% if 'session_create' in request.resolver_match.url_name %}active{% endif %}">
+        <span class="icon">➕</span> Nueva Sesión
+      </a>
+      <a href="{% url 'workouts:session_list' %}" class="{% if 'session' in request.resolver_match.url_name and 'create' not in request.resolver_match.url_name %}active{% endif %}">
+        <span class="icon">📋</span> Sesiones
+      </a>
+      <a href="{% url 'workouts:routine_list' %}" class="{% if 'routine' in request.resolver_match.url_name %}active{% endif %}">
+        <span class="icon">📅</span> Rutinas
+      </a>
+      <a href="{% url 'workouts:exercise_list' %}" class="{% if 'exercise' in request.resolver_match.url_name %}active{% endif %}">
+        <span class="icon">🏋️</span> Ejercicios
+      </a>
+      <a href="{% url 'workouts:progress' %}" class="{% if request.resolver_match.url_name == 'progress' %}active{% endif %}">
+        <span class="icon">📈</span> Progreso
+      </a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <strong>{{ request.user.username }}</strong>
+        Tu perfil
+      </div>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary btn-sm" style="width:100%;justify-content:center;">
+          Cerrar sesión
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <main class="main">
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}{{ routine.name }} — GymLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>{{ routine.name }}</h1>
+    {% if routine.description %}<p style="color:var(--text-muted);">{{ routine.description }}</p>{% endif %}
+  </div>
+  <div style="display:flex;gap:8px;">
+    <a href="{% url 'workouts:routine_edit' routine.pk %}" class="btn btn-secondary">Editar</a>
+    <a href="{% url 'workouts:session_create' %}" class="btn btn-primary">➕ Sesión</a>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+  <div class="card">
+    <h2 style="margin-bottom:16px;">Ejercicios ({{ routine.exercises.count }})</h2>
+    {% for ex in routine.exercises.all %}
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);">
+      <span>{{ ex.name }}</span>
+      <span class="badge badge-{{ ex.category }}">{{ ex.get_category_display }}</span>
+    </div>
+    {% empty %}
+    <p style="color:var(--text-muted);">Sin ejercicios asignados.</p>
+    {% endfor %}
+  </div>
+
+  <div class="card">
+    <h2 style="margin-bottom:16px;">Últimas sesiones</h2>
+    {% for session in sessions %}
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);">
+      <div>
+        <div style="font-weight:500;">{{ session.date|date:"d M Y" }}</div>
+        <div style="font-size:12px;color:var(--text-muted);">{{ session.duration_minutes }} min</div>
+      </div>
+      <a href="{% url 'workouts:session_detail' session.pk %}" class="btn btn-secondary btn-sm">Ver</a>
+    </div>
+    {% empty %}
+    <p style="color:var(--text-muted);">Sin sesiones aún.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

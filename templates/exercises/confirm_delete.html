@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar ejercicio — GymLog{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Eliminar ejercicio</h1></div>
+<div class="card" style="max-width:480px;">
+  <p style="margin-bottom:20px;">¿Estás seguro de que quieres eliminar <strong>{{ exercise.name }}</strong>?
+  Se eliminarán también todas las series registradas de este ejercicio.</p>
+  <form method="post" style="display:flex;gap:10px;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+    <a href="{% url 'workouts:exercise_list' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

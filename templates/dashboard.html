@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — GymLog{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Dashboard</h1>
+  <a href="{% url 'workouts:session_create' %}" class="btn btn-primary">➕ Nueva sesión</a>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="value">{{ total_sessions }}</div>
+    <div class="label">Sesiones totales</div>
+  </div>
+  <div class="stat-card">
+    <div class="value">{{ sessions_this_week }}</div>
+    <div class="label">Esta semana</div>
+  </div>
+  <div class="stat-card">
+    <div class="value">{{ total_routines }}</div>
+    <div class="label">Rutinas</div>
+  </div>
+  <div class="stat-card">
+    <div class="value">{{ total_exercises }}</div>
+    <div class="label">Ejercicios</div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+  <!-- Sesiones recientes -->
+  <div class="card">
+    <h2 style="margin-bottom:16px;">Sesiones recientes</h2>
+    {% if recent_sessions %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Fecha</th><th>Rutina</th><th>Duración</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for session in recent_sessions %}
+          <tr>
+            <td>{{ session.date|date:"d M" }}</td>
+            <td>{{ session.routine.name|default:"—" }}</td>
+            <td>{{ session.duration_minutes }} min</td>
+            <td><a href="{% url 'workouts:session_detail' session.pk %}" class="btn btn-secondary btn-sm">Ver</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="icon">🏋️</div>
+      <p>Aún no tienes sesiones registradas.</p>
+      <a href="{% url 'workouts:session_create' %}" class="btn btn-primary">Registrar primera sesión</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Records personales -->
+  <div class="card">
+    <h2 style="margin-bottom:16px;">Récords personales</h2>
+    {% if top_exercises %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Ejercicio</th><th>PR</th><th>Series</th></tr></thead>
+        <tbody>
+          {% for ex in top_exercises %}
+          <tr>
+            <td><a href="{% url 'workouts:exercise_detail' ex.pk %}" style="color:var(--text);text-decoration:none;">{{ ex.name }}</a></td>
+            <td class="pr-badge">{{ ex.max_weight|default:"—" }} <small style="font-size:12px;font-family:'DM Sans',sans-serif;">kg</small></td>
+            <td style="color:var(--text-muted);">{{ ex.total_sets }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="icon">🏆</div>
+      <p>Registra sesiones para ver tus récords.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

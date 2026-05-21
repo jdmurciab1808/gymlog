@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Ejercicios — GymLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Ejercicios</h1>
+  <a href="{% url 'workouts:exercise_create' %}" class="btn btn-primary">➕ Nuevo ejercicio</a>
+</div>
+
+{% if exercises %}
+<div class="cards-grid">
+  {% for ex in exercises %}
+  <div class="card">
+    <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:10px;">
+      <h3>{{ ex.name }}</h3>
+      <span class="badge badge-{{ ex.category }}">{{ ex.get_category_display }}</span>
+    </div>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:4px;">
+      💪 {{ ex.muscle_group.name|default:"Sin grupo" }}
+    </p>
+    {% if ex.description %}
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">{{ ex.description|truncatewords:12 }}</p>
+    {% endif %}
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <a href="{% url 'workouts:exercise_detail' ex.pk %}" class="btn btn-secondary btn-sm">Ver progreso</a>
+      <a href="{% url 'workouts:exercise_edit' ex.pk %}" class="btn btn-secondary btn-sm">Editar</a>
+      <a href="{% url 'workouts:exercise_delete' ex.pk %}" class="btn btn-danger btn-sm">🗑</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="icon">🏋️</div>
+  <p>No tienes ejercicios creados aún.</p>
+  <a href="{% url 'workouts:exercise_create' %}" class="btn btn-primary">Crear primer ejercicio</a>
+</div>
+{% endif %}
+{% endblock %}

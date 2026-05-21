@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Rutinas — GymLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Rutinas</h1>
+  <a href="{% url 'workouts:routine_create' %}" class="btn btn-primary">➕ Nueva rutina</a>
+</div>
+{% if routines %}
+<div class="cards-grid">
+  {% for routine in routines %}
+  <div class="card">
+    <h3 style="margin-bottom:8px;">{{ routine.name }}</h3>
+    {% if routine.description %}
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">{{ routine.description|truncatewords:15 }}</p>
+    {% endif %}
+    <p style="font-size:12px;color:var(--text-muted);">{{ routine.exercises.count }} ejercicios · {{ routine.total_sessions }} sesiones</p>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <a href="{% url 'workouts:routine_detail' routine.pk %}" class="btn btn-secondary btn-sm">Ver</a>
+      <a href="{% url 'workouts:routine_edit' routine.pk %}" class="btn btn-secondary btn-sm">Editar</a>
+      <a href="{% url 'workouts:routine_delete' routine.pk %}" class="btn btn-danger btn-sm">🗑</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="icon">📅</div>
+  <p>No tienes rutinas creadas. Crea ejercicios primero, luego agrúpalos en rutinas.</p>
+  <a href="{% url 'workouts:routine_create' %}" class="btn btn-primary">Crear rutina</a>
+</div>
+{% endif %}
+{% endblock %}

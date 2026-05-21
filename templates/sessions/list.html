@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Sesiones — GymLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Sesiones</h1>
+  <a href="{% url 'workouts:session_create' %}" class="btn btn-primary">➕ Nueva sesión</a>
+</div>
+{% if sessions %}
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Fecha</th><th>Rutina</th><th>Duración</th><th>Volumen</th><th>Series</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for session in sessions %}
+        <tr>
+          <td><strong>{{ session.date|date:"d M Y" }}</strong></td>
+          <td>{{ session.routine.name|default:"Libre" }}</td>
+          <td>{{ session.duration_minutes }} min</td>
+          <td>{{ session.total_volume }} kg·rep</td>
+          <td>{{ session.sets.count }}</td>
+          <td style="display:flex;gap:6px;">
+            <a href="{% url 'workouts:session_detail' session.pk %}" class="btn btn-secondary btn-sm">Ver</a>
+            <a href="{% url 'workouts:session_edit' session.pk %}" class="btn btn-secondary btn-sm">✏️</a>
+            <a href="{% url 'workouts:session_delete' session.pk %}" class="btn btn-danger btn-sm">🗑</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- Paginación -->
+  {% if is_paginated %}
+  <div style="display:flex;gap:8px;justify-content:center;margin-top:20px;">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">← Anterior</a>
+    {% endif %}
+    <span style="padding:6px 12px;font-size:13px;color:var(--text-muted);">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">Siguiente →</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="icon">📋</div>
+  <p>Aún no has registrado ninguna sesión.</p>
+  <a href="{% url 'workouts:session_create' %}" class="btn btn-primary">Registrar primera sesión</a>
+</div>
+{% endif %}
+{% endblock %}
